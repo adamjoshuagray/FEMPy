@@ -13,10 +13,10 @@ import math
 import pylab as plot
 from mpl_toolkits.mplot3d import Axes3D
 
-width       = 1.2
-height      = 1.2
-h_x         = 0.2
-h_y         = 0.2
+width       = 1.4
+height      = 1.4
+h_x         = 0.02
+h_y         = 0.02
 
 
 """ 
@@ -68,20 +68,18 @@ for i in range( num_x ):
     Setup the boundry values.
 """
 
-a           = np.repeat( 0.25, 2 * ( num_x + num_y ) )
-b           = np.concatenate( ( np.repeat( 1., num_x ), np.repeat( 0., num_x + 2 * num_y ) ) )
-c           = a * b
+b           = np.concatenate( ( np.repeat( 0.25, num_x ), np.repeat( 0., num_U - num_x ) ) )
 
-u           = la.solve( L, c )
+u           = la.solve( L, b )
 U           = u.reshape( ( num_x, num_y ) )
 
 """
     Plot the result.
 """
 
-fig         = plot.figure()
-ax          = Axes3D( fig )
-x           = np.arange( 0, width, h_x )[ 1: -1 ]
-y           = np.arange( 0, height, h_y )[ 1 : -1 ]
-x, y        = np.meshgrid( x, y )
-ax.plot( x, y, U, rstride=1, cstride=1, cmap='hot' );
+fig = plot.figure()
+ax = fig.add_subplot(1,1,1)
+ax.set_aspect('equal')
+plot.imshow(U, interpolation='nearest', cmap=plot.cm.ocean)
+plot.colorbar()
+plot.show() 
